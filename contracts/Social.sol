@@ -15,6 +15,7 @@ contract Social {
     address user;
     string name;
     string imageAddress;
+    string coverImageAddress;
     Post[] posts;
     string[] friends;
   }
@@ -64,6 +65,11 @@ contract Social {
     user.imageAddress = _imageAddress;
   }
 
+  function updateUserCoverImage(string memory _coverImage) external {
+    User storage user = users[msg.sender];
+    user.coverImageAddress = _coverImage;
+  }
+
   function updateUserName(string memory _name) external {
     User storage user = users[msg.sender];
     user.name = _name;
@@ -76,6 +82,7 @@ contract Social {
       address,
       string memory,
       string memory,
+      string memory,
       Post[] memory,
       string[] memory
     )
@@ -84,16 +91,18 @@ contract Social {
       users[msg.sender].user,
       users[msg.sender].name,
       users[msg.sender].imageAddress,
+      users[msg.sender].coverImageAddress,
       users[msg.sender].posts,
       users[msg.sender].friends
     );
   }
 
-  function fetchPostUser(address _user)
+  function fetchSingleUser(address _user)
     external
     view
     returns (
       address,
+      string memory,
       string memory,
       string memory,
       Post[] memory,
@@ -104,6 +113,7 @@ contract Social {
       users[_user].user,
       users[_user].name,
       users[_user].imageAddress,
+      users[_user].coverImageAddress,
       users[_user].posts,
       users[_user].friends
     );

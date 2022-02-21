@@ -9,10 +9,8 @@ import Social from "../artifacts/contracts/Social.sol/Social.json";
 
 const CreatePost = () => {
   const client = ipfsHttpClient("https://ipfs.infura.io:5001/");
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState("");
   const [desc, setDesc] = useState("");
-  const router = useRouter();
-  // const account = useSelector((state) => state.account);
 
   const createPost = async () => {
     try {
@@ -31,11 +29,12 @@ const CreatePost = () => {
 
       let transaction = await contract.createPost(desc, url);
       await transaction.wait();
-      window.location.reload();
     } catch (error) {
       console.log("Error: ", error);
     }
   };
+
+  console.log(file);
 
   return (
     <div className="mx-2 p-5 rounded-lg shadow w-[100%] md:w-[450px] bg-[#2F2F2F] ">
@@ -75,10 +74,8 @@ const CreatePost = () => {
             className="w-full h-auto object-cover rounded-lg"
           />
           <XCircleIcon
-            className="w-4 h-4 absolute top-0 right-0 bg-white rounded-bl cursor-pointer"
-            onClick={() => {
-              setFile(null);
-            }}
+            className="w-4 h-4 text-[#2f2f2f] absolute top-0 right-0 bg-white rounded-bl cursor-pointer"
+            onClick={() => window.location.reload()}
           />
         </div>
       )}

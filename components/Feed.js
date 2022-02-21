@@ -23,27 +23,39 @@ const Feed = () => {
 
     let posts = await contract.fetchPosts();
 
-    router.asPath === "/" ? setPosts(posts) : setPosts(user[3]);
+    user.posts
+      ? router.asPath === "/"
+        ? setPosts(posts)
+        : setPosts(user.posts)
+      : setPosts([]);
+
+    !posts && setPosts([]);
   };
 
   useEffect(() => {
+    setLoading(true);
     fetchPost();
-  }, [loading]);
+    setLoading(false);
+  }, [loading, user]);
 
   return (
     <div className="pt-10  pb-16 md:px-0 flex flex-col items-center h-screen overflow-y-scroll scrollbar-hide">
-      {posts?.map((post) => (
-        <Post
-          key={post.postId._hex}
-          postId={post.postId.toNumber()}
-          likes={post.likes.length}
-          disLikes={post.disLikes.length}
-          content={post[2]}
-          imageAddress={post.imageAddress}
-          author={post.author}
-          setLoading={setLoading}
-        />
-      ))}
+      {posts ? (
+        posts?.map((post) => (
+          <Post
+            key={post.postId._hex}
+            postId={post.postId.toNumber()}
+            likes={post.likes.length}
+            disLikes={post.disLikes.length}
+            content={post.content}
+            imageAddress={post.imageAddress}
+            author={post.author}
+            setLoading={setLoading}
+          />
+        ))
+      ) : (
+        <h1 className="text-3xl font-semibold">Are you lost?</h1>
+      )}
     </div>
   );
 };

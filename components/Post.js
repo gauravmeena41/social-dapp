@@ -54,9 +54,18 @@ const Post = ({
 
     const contract = new ethers.Contract(contractAddress, Social.abi, signer);
 
-    const user = await contract.fetchPostUser(userAddress);
+    const user = await contract.fetchSingleUser(userAddress);
 
-    setPostAuthor(user);
+    const currentUser = {
+      userId: user[0],
+      name: user[1],
+      profileImg: user[2],
+      coverImg: user[3],
+      posts: user[4],
+      friends: user[5],
+    };
+
+    setPostAuthor(currentUser);
   };
 
   useEffect(() => {
@@ -70,8 +79,8 @@ const Post = ({
           <Link href="/profile">
             <img
               src={
-                postAuthor[2]
-                  ? postAuthor[2]
+                postAuthor.profileImg
+                  ? postAuthor.profileImg
                   : "https://cdn.dribbble.com/users/1577045/screenshots/4914645/media/5146d1dbf9146c4d12a7249e72065a58.png"
               }
               alt=""
@@ -79,7 +88,7 @@ const Post = ({
             />
           </Link>
           <h1 className="font-bold text-lg">
-            {postAuthor[1] ? postAuthor[1] : "User"}
+            {postAuthor.name ? postAuthor.name : "User"}
           </h1>
         </div>
         <div className="">

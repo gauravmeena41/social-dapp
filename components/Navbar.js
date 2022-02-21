@@ -7,11 +7,15 @@ import { bindActionCreators } from "redux";
 import { actionCreators } from "../redux/index";
 import { contractAddress } from "../config";
 import Social from "../artifacts/contracts/Social.sol/Social.json";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { SearchIcon } from "@heroicons/react/outline";
 
 const Navbar = () => {
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const [searchId, setSearchId] = useState("");
+  const router = useRouter();
 
   const { addUser, removeUser } = bindActionCreators(actionCreators, dispatch);
 
@@ -43,6 +47,7 @@ const Navbar = () => {
 
     if (user[0] === "0x0000000000000000000000000000000000000000") {
       user = await contract.createUser();
+      user = await contract.fetchUser();
     } else {
       user = await contract.fetchUser();
     }
@@ -54,7 +59,15 @@ const Navbar = () => {
       const web3Modal = await getWeb3Modal();
       const connection = await web3Modal.connect();
       let user = await createAndFetchUser();
-      addUser(user);
+      const currentUser = {
+        userId: user[0],
+        name: user[1],
+        profileImg: user[2],
+        coverImg: user[3],
+        posts: user[4],
+        friends: user[5],
+      };
+      addUser(currentUser);
     } catch (error) {
       console.log("error:", error);
     }
@@ -67,29 +80,41 @@ const Navbar = () => {
           <a className="text-2xl font-bold">SOCIAL</a>
         </Link>
       </div>
-      <div className="relative">
+      <div className="relative flex items-center">
         <input
           type="text"
+          value={searchId}
+          onChange={(e) => setSearchId(e.target.value)}
           placeholder="Search for people..."
           className="border-2 border-gray-400 rounded-full outline-none px-2 py-[3px] bg-transparent"
         />
+        <Link href={`/search/${searchId}`}>
+          <button className="absolute bg-gray-400  rounded-tr-full rounded-br-full top-[1.5px] right-[1px] px-2 py-[3.5px]">
+            <SearchIcon className="w-6 h-6 " />
+          </button>
+        </Link>
       </div>
       <div>
-        {user.length > 0 ? (
+        {user.length !== 0 ? (
           <Link
-            href="profile"
+            href="/profile"
             onClick={() => removeUser()}
             className="font-semibold uppercase"
           >
-            <img
-              src={
-                user[2]
-                  ? user[2]
-                  : "https://cdn.dribbble.com/users/1577045/screenshots/4914645/media/5146d1dbf9146c4d12a7249e72065a58.png"
-              }
-              alt=""
-              className="w-8 h-8 object-cover rounded-full p-[2px] border-2 border-gray-400 cursor-pointer"
-            />
+            <div className="flex items-center space-x-2 cursor-pointer">
+              <img
+                src={
+                  user.profileImg
+                    ? user.profileImg
+                    : "https://cdn.dribbble.com/users/1577045/screenshots/4914645/media/5146d1dbf9146c4d12a7249e72065a58.png"
+                }
+                alt=""
+                className="w-8 h-8 object-cover rounded-full p-[2px] border-2 border-gray-400 "
+              />
+              <h1 className="font-semibold">
+                {user.name ? user.name : "User"}
+              </h1>
+            </div>
           </Link>
         ) : (
           <button onClick={connect} className="font-semibold uppercase">

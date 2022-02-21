@@ -68,16 +68,16 @@ describe("Social", function () {
   //   console.log(user);
   //   // console.log(posts);
   // });
-  // it("Should update the user", async () => {
-  //   const Social = await ethers.getContractFactory("Social");
-  //   const social = await Social.deploy();
-  //   await social.deployed();
-  //   console.log("Social deployed", social.address);
-  //   await social.createUser();
-  //   await social.updateUserImage(
-  //     "https://images.unsplash.com/photo-1645149837391-f548b61af03d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-  //   );
-  //   const user = await social.fetchUser();
-  //   console.log(user);
-  // });
+  it("Should update the user", async () => {
+    const Social = await ethers.getContractFactory("Social");
+    const social = await Social.deploy();
+    await social.deployed();
+    console.log("Social deployed", social.address);
+    await social.createUser();
+    await social.updateUserCoverImage(
+      "https://images.unsplash.com/photo-1645149837391-f548b61af03d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+    );
+    const user = await social.fetchUser();
+    console.log(user);
+  });
 });
