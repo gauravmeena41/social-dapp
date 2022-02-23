@@ -5,12 +5,12 @@ import Navbar from "../components/Navbar";
 
 export default function Home() {
   return (
-    <div className="h-screen">
+    <div className="h-screen flex items-center justify-center">
       <Head>
         <title>Social app</title>
       </Head>
       <Navbar />
-      <div className="flex mt-16">
+      <div className="flex mt-36 w-[100%] lg:w-[70%]">
         <div className="flex-1 px-2 ">
           <Feed />
         </div>

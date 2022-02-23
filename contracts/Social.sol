@@ -4,12 +4,10 @@ pragma solidity ^0.8.10;
 import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract Social {
-  address public owner;
+  address private owner;
 
   using Counters for Counters.Counter;
   Counters.Counter private _postIds;
-
-  mapping(address => bool) likes;
 
   struct User {
     address user;
@@ -27,6 +25,7 @@ contract Social {
     string imageAddress;
     address[] likes;
     address[] disLikes;
+    uint256 postTime;
   }
 
   mapping(address => User) private users;
@@ -55,7 +54,7 @@ contract Social {
     owner = msg.sender;
   }
 
-  function createUser() public {
+  function createUser() external {
     User storage user = users[msg.sender];
     user.user = msg.sender;
   }
@@ -76,7 +75,7 @@ contract Social {
   }
 
   function fetchUser()
-    public
+    external
     view
     returns (
       address,
@@ -120,7 +119,7 @@ contract Social {
   }
 
   function createPost(string memory _content, string memory _imageAddress)
-    public
+    external
   {
     require(bytes(_content).length > 0, "Content can't be empty.");
     _postIds.increment();
@@ -131,6 +130,7 @@ contract Social {
     post.author = msg.sender;
     post.content = _content;
     post.imageAddress = _imageAddress;
+    post.postTime = block.timestamp;
 
     idToPost[postId] = post;
 
@@ -140,7 +140,7 @@ contract Social {
     user.posts.push(post);
   }
 
-  function updatePost(uint256 _postId, string memory _content) public {
+  function updatePost(uint256 _postId, string memory _content) external {
     require(
       msg.sender == idToPost[_postId].author,
       "Only the author can edit the post."
@@ -154,7 +154,7 @@ contract Social {
     emit PostUpdated(_postId, msg.sender, _content);
   }
 
-  function likePost(uint256 _postId) public {
+  function likePost(uint256 _postId) external {
     require(
       _postId > 0 && _postId <= _postIds.current(),
       "Post does not exist."
@@ -166,7 +166,7 @@ contract Social {
     emit PostLiked(_postId, msg.sender);
   }
 
-  function disLikePost(uint256 _postId) public {
+  function disLikePost(uint256 _postId) external {
     require(
       _postId > 0 && _postId <= _postIds.current(),
       "Post does not exist."
@@ -176,7 +176,7 @@ contract Social {
     emit PostDisLiked(_postId, msg.sender);
   }
 
-  function fetchPosts() public view returns (Post[] memory) {
+  function fetchPosts() external view returns (Post[] memory) {
     uint256 itemCount = _postIds.current();
     uint256 currentIndex = 0;
 

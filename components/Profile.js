@@ -5,13 +5,15 @@ import Friends from "../components/Friends";
 import { contractAddress } from "../config";
 import CreatePost from "./CreatePost";
 import Social from "../artifacts/contracts/Social.sol/Social.json";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CameraIcon, PencilAltIcon, PencilIcon } from "@heroicons/react/solid";
 import { create as ipfsHttpClient } from "ipfs-http-client";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { actionCreators } from "../redux/index";
 import { bindActionCreators } from "redux";
+import { createAndFetchUser, updateUser } from "../helper";
+import { useRouter } from "next/router";
 
 const Profile = () => {
   const [userName, setUserName] = useState("");
@@ -20,78 +22,11 @@ const Profile = () => {
   const [pencilIcon, setPencilIcon] = useState(false);
   const [uploadingProfile, setUploadingProfile] = useState(false);
   const [uploadingCover, setUploadingCover] = useState(false);
-  const client = ipfsHttpClient("https://ipfs.infura.io:5001/");
-  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const router = useRouter();
+  const user = useSelector((state) => state.user);
 
   const { addUser, removeUser } = bindActionCreators(actionCreators, dispatch);
-
-  const updateUser = async (file, action) => {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
-
-    const contract = new ethers.Contract(contractAddress, Social.abi, signer);
-
-    let user = await contract.fetchUser();
-    if (file && action === "profile") {
-      setUploadingProfile(true);
-      const added = await client.add(file, {
-        progress: (prog) => console.log("Received:", prog),
-      });
-
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-
-      await contract.updateUserImage(url);
-      user = await contract.fetchUser();
-      const currentUser = {
-        userId: user[0],
-        name: user[1],
-        profileImg: user[2],
-        coverImg: user[3],
-        posts: user[4],
-        friends: user[5],
-      };
-      addUser(currentUser);
-      setUploadingProfile(false);
-    } else if (userName) {
-      userName && (await contract.updateUserName(userName));
-      user = await contract.fetchUser();
-      const currentUser = {
-        userId: user[0],
-        name: user[1],
-        profileImg: user[2],
-        coverImg: user[3],
-        posts: user[4],
-        friends: user[5],
-      };
-      addUser(currentUser);
-    } else if (file && action === "cover") {
-      setUploadingCover(true);
-      const added = await client.add(file, {
-        progress: (prog) => console.log("Received:", prog),
-      });
-
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-
-      await contract.updateUserCoverImage(url);
-      user = await contract.fetchUser();
-      const currentUser = {
-        userId: user[0],
-        name: user[1],
-        profileImg: user[2],
-        coverImg: user[3],
-        posts: user[4],
-        friends: user[5],
-      };
-      addUser(currentUser);
-      setUploadingCover(false);
-    }
-
-    setUserName("");
-    setPencilIcon(false);
-  };
 
   return (
     <div>
@@ -99,7 +34,7 @@ const Profile = () => {
         <div className="w-full">
           <img
             onClick={() => setCoverCameraIcon(!coverCameraIcon)}
-            className="w-full h-[300px] object-cover origin-bottom"
+            className="w-full h-[300px] object-cover"
             src={
               user.coverImg && !uploadingCover
                 ? user.coverImg
@@ -113,14 +48,25 @@ const Profile = () => {
             onMouseLeave={() => setCoverCameraIcon(false)}
             className={`${
               coverCameraIcon ? "inline-flex" : "hidden"
-            } cursor-pointer absolute top-0 w-full h-[300px] flex justify-center bg-[#272727] bg-opacity-50 `}
+            } cursor-pointer absolute top-0 w-full h-[300px] flex justify-center bg-[#242526] bg-opacity-50`}
             htmlFor="coverImg"
           >
             <CameraIcon className="w-40 cursor-pointer" />
           </label>
           <input
-            onChange={(e) => {
-              updateUser(e.target.files[0], "cover");
+            onChange={async (e) => {
+              await updateUser(e.target.files[0], "cover");
+              let user = await createAndFetchUser();
+              const currentUser = {
+                userId: user[0],
+                name: user[1],
+                profileImg: user[2],
+                coverImg: user[3],
+                posts: user[4],
+                friends: user[5],
+              };
+              addUser(currentUser);
+              router.push("/");
             }}
             className="hidden"
             type="file"
@@ -151,8 +97,21 @@ const Profile = () => {
           <CameraIcon className="w-20 h-20" />
         </label>
         <input
-          onChange={(e) => {
-            updateUser(e.target.files[0], "profile");
+          onChange={async (e) => {
+            setUploadingProfile(true);
+            await updateUser(e.target.files[0], "profile");
+            setUploadingProfile(false);
+            let user = await createAndFetchUser();
+            const currentUser = {
+              userId: user[0],
+              name: user[1],
+              profileImg: user[2],
+              coverImg: user[3],
+              posts: user[4],
+              friends: user[5],
+            };
+            addUser(currentUser);
+            router.push("/");
           }}
           className="hidden"
           type="file"
@@ -185,8 +144,21 @@ const Profile = () => {
               Cancel
             </button>
             <button
-              onClick={() => {
-                userName && updateUser();
+              onClick={async () => {
+                await updateUser("", "", userName);
+                let user = await createAndFetchUser();
+                const currentUser = {
+                  userId: user[0],
+                  name: user[1],
+                  profileImg: user[2],
+                  coverImg: user[3],
+                  posts: user[4],
+                  friends: user[5],
+                };
+                addUser(currentUser);
+                router.push("/");
+                setPencilIcon(false);
+                setUserName("");
               }}
               className="text-sm bg-gray-600 px-2 py-[2px] font-semibold rounded-full mt-1 ml-2 "
             >
