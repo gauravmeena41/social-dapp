@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../redux/index";
 import { useState } from "react";
-import { useRouter } from "next/router";
+import Image from "next/image";
 import { SearchIcon } from "@heroicons/react/outline";
 import { createAndFetchUser, getWeb3Modal } from "../helper";
 
@@ -62,14 +62,15 @@ const Navbar = () => {
             className="font-semibold uppercase"
           >
             <div className="flex items-center space-x-2 cursor-pointer">
-              <img
+              <Image
                 src={
                   user.profileImg
                     ? user.profileImg
                     : "https://cdn.dribbble.com/users/1577045/screenshots/4914645/media/5146d1dbf9146c4d12a7249e72065a58.png"
                 }
-                alt=""
-                className="w-8 h-8 object-cover rounded-full p-[2px] border-2 border-[#4a4e69] "
+                width={"32px"}
+                height={"32px"}
+                className="rounded-full object-cover"
               />
               <h1 className="font-semibold">
                 {user.name ? user.name : "User"}

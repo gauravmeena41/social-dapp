@@ -14,6 +14,7 @@ import { actionCreators } from "../redux/index";
 import { bindActionCreators } from "redux";
 import { createAndFetchUser, updateUser } from "../helper";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 const Profile = () => {
   const [userName, setUserName] = useState("");
@@ -32,18 +33,21 @@ const Profile = () => {
     <div>
       <div className="relative flex justify-center items-center flex-col">
         <div className="w-full">
-          <img
-            onClick={() => setCoverCameraIcon(!coverCameraIcon)}
-            className="w-full h-[300px] object-cover"
-            src={
-              user.coverImg && !uploadingCover
-                ? user.coverImg
-                : user.coverImg && uploadingCover
-                ? "/loading.gif"
-                : "https://images.unsplash.com/photo-1623085684060-5de6da56a3e5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-            }
-            alt=""
-          />
+          <div className="w-[100%] h-[300px]">
+            <Image
+              onClick={() => setCoverCameraIcon(!coverCameraIcon)}
+              src={
+                user.coverImg && !uploadingCover
+                  ? user.coverImg
+                  : user.coverImg && uploadingCover
+                  ? "/loading.gif"
+                  : "https://images.unsplash.com/photo-1623085684060-5de6da56a3e5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+              }
+              layout="fill"
+              className="object-cover"
+            />
+          </div>
+
           <label
             onMouseLeave={() => setCoverCameraIcon(false)}
             className={`${
@@ -74,19 +78,22 @@ const Profile = () => {
           />
         </div>
 
-        <img
-          onClick={() => setProfileCameraIcon(!profileCameraIcon)}
-          className="w-40 h-40 rounded-full bg-[#272727]  object-cover absolute bottom-[-80px] border-4 border-[#202020] shadow-base-shadow "
-          src={
-            user.profileImg && !uploadingProfile
-              ? user.profileImg
-              : (user.profileImg && uploadingProfile) ||
-                (!user.profileImg && uploadingProfile)
-              ? "/loading.gif"
-              : "https://cdn.dribbble.com/users/1577045/screenshots/4914645/media/5146d1dbf9146c4d12a7249e72065a58.png"
-          }
-          alt=""
-        />
+        <div className="w-40 h-40 rounded-full bg-[#272727]  absolute bottom-[-80px] border-4 border-[#202020] shadow-base-shadow">
+          <Image
+            onClick={() => setProfileCameraIcon(!profileCameraIcon)}
+            src={
+              user.profileImg && !uploadingProfile
+                ? user.profileImg
+                : (user.profileImg && uploadingProfile) ||
+                  (!user.profileImg && uploadingProfile)
+                ? "/loading.gif"
+                : "https://cdn.dribbble.com/users/1577045/screenshots/4914645/media/5146d1dbf9146c4d12a7249e72065a58.png"
+            }
+            layout="fill"
+            className="object-cover rounded-full"
+          />
+        </div>
+
         <label
           onMouseLeave={() => setProfileCameraIcon(false)}
           className={`${

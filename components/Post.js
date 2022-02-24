@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
 import { likePost, disLikePost } from "../helper";
 import moment from "moment";
+import Image from "next/image";
 
 const Post = ({
   content,
@@ -52,15 +53,19 @@ const Post = ({
       <div className="flex items-center justify-between p-2 pt-4 md:p-4 border-b border-[#4a4e69]">
         <div className=" flex ">
           <Link href="/profile">
-            <img
-              src={
-                postAuthor.profileImg
-                  ? postAuthor.profileImg
-                  : "https://cdn.dribbble.com/users/1577045/screenshots/4914645/media/5146d1dbf9146c4d12a7249e72065a58.png"
-              }
-              alt=""
-              className="w-8 h-8 object-cover rounded-full mr-3 cursor-pointer shadow"
-            />
+            <div className="mr-2">
+              <Image
+                src={
+                  postAuthor.profileImg
+                    ? postAuthor.profileImg
+                    : "https://cdn.dribbble.com/users/1577045/screenshots/4914645/media/5146d1dbf9146c4d12a7249e72065a58.png"
+                }
+                // layout="fill"
+                width={"28px"}
+                height={"28px"}
+                className=" object-cover rounded-full cursor-pointer shadow"
+              />
+            </div>
           </Link>
           <h1 className="font-semibold text-lg ">
             {postAuthor.name ? postAuthor.name : "User"}
@@ -74,7 +79,15 @@ const Post = ({
       </div>
       <div className="">
         <h1 className="text-lg mx-4 my-2 ">{content}</h1>
-        <img src={imageAddress} alt="" className="w-full h-auto object-cover" />
+        <div className="w-[100%] h-auto">
+          <Image
+            src={imageAddress}
+            width={400}
+            height={250}
+            className="object-cover"
+          />
+        </div>
+        {/* <img src={imageAddress} alt="" className="w-full h-auto object-cover" /> */}
       </div>
       <div className="p-2 flex items-center justify-between space-x-1">
         <div

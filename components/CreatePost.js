@@ -2,6 +2,7 @@ import { PhotographIcon, XCircleIcon } from "@heroicons/react/solid";
 import { useState } from "react";
 import { createPost } from "../helper";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 const CreatePost = () => {
   const [file, setFile] = useState("");
@@ -46,22 +47,24 @@ const CreatePost = () => {
       </form>
       {file && (
         <div className="mt-4 relative flex justify-center">
-          <img
-            src={URL.createObjectURL(file)}
-            alt=""
-            className="w-full h-auto object-cover rounded-lg"
-          />
+          <div className="w-full h-[250px] ">
+            <Image
+              src={URL.createObjectURL(file)}
+              layout="fill"
+              className="object-cover rounded-lg"
+            />
+          </div>
           <XCircleIcon
             className="w-4 h-4 text-[#2f2f2f] absolute top-0 right-0 bg-white rounded-bl cursor-pointer"
             onClick={() => window.location.reload()}
           />
-          <img
+          {/* <img
             className={`absolute top-0 h-24 ${
               loading ? "inline-flex" : "hidden"
             }`}
             src="/loading.gif"
             alt=""
-          />
+          /> */}
         </div>
       )}
     </div>

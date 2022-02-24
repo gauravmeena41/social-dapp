@@ -9,7 +9,7 @@ module.exports = {
       chainId: 1337,
     },
     mumbai: {
-      url: "https://polygon-mumbai.infura.io/v3/829f7524e1374c809c3974c7e010084f",
+      url: "https://polygon-mumbai.g.alchemy.com/v2/yqIkrvNlkwqHab-8SldK037mZmTuvv46",
       accounts: [PRIVATE_KEY],
     },
   },
