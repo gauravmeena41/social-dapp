@@ -50,6 +50,7 @@ const CreatePost = () => {
           <div className="w-full h-[250px] ">
             <Image
               src={URL.createObjectURL(file)}
+              alt=""
               layout="fill"
               className="object-cover rounded-lg"
             />

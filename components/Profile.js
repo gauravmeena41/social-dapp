@@ -43,6 +43,7 @@ const Profile = () => {
                   ? "/loading.gif"
                   : "https://images.unsplash.com/photo-1623085684060-5de6da56a3e5?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
               }
+              alt=""
               layout="fill"
               className="object-cover"
             />
@@ -89,6 +90,7 @@ const Profile = () => {
                 ? "/loading.gif"
                 : "https://cdn.dribbble.com/users/1577045/screenshots/4914645/media/5146d1dbf9146c4d12a7249e72065a58.png"
             }
+            alt=""
             layout="fill"
             className="object-cover rounded-full"
           />

@@ -60,7 +60,7 @@ const Post = ({
                     ? postAuthor.profileImg
                     : "https://cdn.dribbble.com/users/1577045/screenshots/4914645/media/5146d1dbf9146c4d12a7249e72065a58.png"
                 }
-                // layout="fill"
+                alt=""
                 width={"28px"}
                 height={"28px"}
                 className=" object-cover rounded-full cursor-pointer shadow"
@@ -82,6 +82,7 @@ const Post = ({
         <div className="w-[100%] h-auto">
           <Image
             src={imageAddress}
+            alt=""
             width={400}
             height={250}
             className="object-cover"

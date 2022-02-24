@@ -68,6 +68,7 @@ const Navbar = () => {
                     ? user.profileImg
                     : "https://cdn.dribbble.com/users/1577045/screenshots/4914645/media/5146d1dbf9146c4d12a7249e72065a58.png"
                 }
+                alt=""
                 width={"32px"}
                 height={"32px"}
                 className="rounded-full object-cover"
