@@ -46,7 +46,7 @@ const Post = ({
 
   useEffect(() => {
     fetchPostUser(author);
-  }, []);
+  }, [author]);
 
   return (
     <div className="shadow-base-shadow hover:shadow-medium-shadow bg-[#242526] rounded-lg w-[100%] mb-10">
