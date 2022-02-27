@@ -10,8 +10,6 @@ const CreatePost = ({ postId, content = "", editPost, setEditPost }) => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  console.log(desc, postId, content);
-
   return (
     <div className="mx-2 my-5  p-5 rounded-lg shadow bg-[#242526] w-[450px] ">
       <form

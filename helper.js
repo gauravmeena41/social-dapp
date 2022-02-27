@@ -55,13 +55,20 @@ export const createAndFetchUser = async () => {
   }
 };
 
+export const fetchSingleUser = async (userId) => {
+  try {
+    const contract = await getContract();
+    const user = await contract.fetchSingleUser(userId);
+    return user;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const createPost = async (desc, file) => {
   try {
     const contract = await getContract();
-    const added = await client.add(file, {
-      progress: (prog) => console.log("Received:", prog),
-    });
-
+    const added = await client.add(file);
     const url = `https://ipfs.infura.io/ipfs/${added.path}`;
 
     let transaction = await contract.createPost(desc, url);
@@ -100,23 +107,26 @@ export const disLikePost = async (postId) => {
   }
 };
 
-export const updateUser = async (file = "", action = "", userName = "") => {
+export const updateUser = async (
+  file = "",
+  action = "",
+  userName = "",
+  userDesc = ""
+) => {
   try {
     const contract = await getContract();
     if (file && action === "profile") {
-      const added = await client.add(file, {
-        progress: (prog) => console.log("Received:", prog),
-      });
+      const added = await client.add(file);
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       await contract.updateUserImage(url);
     } else if (userName !== "") {
       await contract.updateUserName(userName);
     } else if (file && action === "cover") {
-      const added = await client.add(file, {
-        progress: (prog) => console.log("Received:", prog),
-      });
+      const added = await client.add(file);
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       await contract.updateUserCoverImage(url);
+    } else if (userDesc !== "") {
+      await contract.updateUserDesc(userDesc);
     }
   } catch (error) {
     console.log(error);

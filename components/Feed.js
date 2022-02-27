@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { useRouter } from "next/router";
 import { getContract } from "../helper";
 
-const Feed = () => {
+const Feed = ({ currentUserPosts }) => {
   const [posts, setPosts] = useState([]);
   const user = useSelector((state) => state.user);
   const router = useRouter();
@@ -17,8 +17,8 @@ const Feed = () => {
 
       router.asPath === "/" && Object.keys(user).length > 0
         ? setPosts(posts)
-        : router.asPath === "/profile"
-        ? setPosts(user.posts)
+        : router.asPath !== "/"
+        ? setPosts(currentUserPosts)
         : setPosts([]);
     } catch (error) {
       console.log(error);
@@ -27,7 +27,7 @@ const Feed = () => {
 
   useEffect(() => {
     fetchPost();
-  }, [Object.keys(user).length > 0]);
+  }, [currentUserPosts || Object.keys(user).length > 0]);
 
   return (
     <div

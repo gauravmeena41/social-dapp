@@ -18,10 +18,11 @@ export default function Home() {
       const currentUser = {
         userId: user[0],
         name: user[1],
-        profileImg: user[2],
-        coverImg: user[3],
-        posts: user[4],
-        friends: user[5],
+        desc: user[2],
+        profileImg: user[3],
+        coverImg: user[4],
+        posts: user[5],
+        friends: user[6],
       };
       addUser(currentUser);
     } catch (error) {

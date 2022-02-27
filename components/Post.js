@@ -12,7 +12,7 @@ import { contractAddress } from "../config";
 import Social from "../artifacts/contracts/Social.sol/Social.json";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
-import { likePost, disLikePost } from "../helper";
+import { likePost, disLikePost, fetchSingleUser } from "../helper";
 import moment from "moment";
 import Image from "next/image";
 import CreatePost from "../components/CreatePost";
@@ -30,25 +30,23 @@ const Post = ({
   const [editPost, setEditPost] = useState(false);
 
   const fetchPostUser = async (userAddress) => {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
+    try {
+      const user = await fetchSingleUser(userAddress);
 
-    const contract = new ethers.Contract(contractAddress, Social.abi, signer);
+      const currentUser = {
+        userId: user[0],
+        name: user[1],
+        desc: user[2],
+        profileImg: user[3],
+        coverImg: user[4],
+        posts: user[5],
+        friends: user[6],
+      };
 
-    const user = await contract.fetchSingleUser(userAddress);
-
-    const currentUser = {
-      userId: user[0],
-      name: user[1],
-      profileImg: user[2],
-      coverImg: user[3],
-      posts: user[4],
-      friends: user[5],
-    };
-
-    setPostAuthor(currentUser);
+      setPostAuthor(currentUser);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -80,7 +78,7 @@ const Post = ({
         <div className="shadow-base-shadow hover:shadow-medium-shadow bg-[#242526] rounded-lg">
           <div className="flex items-center justify-between p-2 pt-4 md:p-4 border-b border-[#4a4e69]">
             <div className=" flex ">
-              <Link href="/profile">
+              <Link href={`/profile/${postAuthor.userId}`}>
                 <div className="mr-2">
                   <Image
                     src={

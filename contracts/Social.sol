@@ -12,6 +12,7 @@ contract Social {
   struct User {
     address user;
     string name;
+    string desc;
     string imageAddress;
     string coverImageAddress;
     Post[] posts;
@@ -74,11 +75,17 @@ contract Social {
     user.name = _name;
   }
 
+  function updateUserDesc(string memory _desc) external {
+    User storage user = users[msg.sender];
+    user.desc = _desc;
+  }
+
   function fetchUser()
     external
     view
     returns (
       address,
+      string memory,
       string memory,
       string memory,
       string memory,
@@ -89,6 +96,7 @@ contract Social {
     return (
       users[msg.sender].user,
       users[msg.sender].name,
+      users[msg.sender].desc,
       users[msg.sender].imageAddress,
       users[msg.sender].coverImageAddress,
       users[msg.sender].posts,
@@ -104,6 +112,7 @@ contract Social {
       string memory,
       string memory,
       string memory,
+      string memory,
       Post[] memory,
       string[] memory
     )
@@ -111,6 +120,7 @@ contract Social {
     return (
       users[_user].user,
       users[_user].name,
+      users[_user].desc,
       users[_user].imageAddress,
       users[_user].coverImageAddress,
       users[_user].posts,
