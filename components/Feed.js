@@ -10,15 +10,19 @@ const Feed = () => {
   const router = useRouter();
 
   const fetchPost = async () => {
-    const contract = await getContract();
+    try {
+      const contract = await getContract();
 
-    let posts = await contract.fetchPosts();
+      let posts = await contract.fetchPosts();
 
-    router.asPath === "/" && Object.keys(user).length > 0
-      ? setPosts(posts)
-      : router.asPath === "/profile"
-      ? setPosts(user.posts)
-      : setPosts([]);
+      router.asPath === "/" && Object.keys(user).length > 0
+        ? setPosts(posts)
+        : router.asPath === "/profile"
+        ? setPosts(user.posts)
+        : setPosts([]);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -26,7 +30,17 @@ const Feed = () => {
   }, [Object.keys(user).length > 0]);
 
   return (
-    <div className="pb-16 md:px-0 flex flex-col items-center h-screen overflow-y-scroll scrollbar-hide">
+    <div
+      className={`pb-16 md:px-0 ${
+        posts?.length > 0
+          ? `grid  ${
+              router.asPath === "/profile"
+                ? "md:grid-cols-2"
+                : "sm:grid-cols-2 lg:grid-cols-3"
+            } gap-5`
+          : "flex"
+      } overflow-scroll scrollbar-hide mx-5`}
+    >
       {posts?.length > 0 ? (
         posts?.map((post) => (
           <Post
@@ -41,7 +55,11 @@ const Feed = () => {
           />
         ))
       ) : (
-        <h1 className="text-3xl font-semibold">Are you lost?</h1>
+        <div>
+          <h1 className="text-3xl place-self-center font-semibold">
+            Are you lost?
+          </h1>
+        </div>
       )}
     </div>
   );

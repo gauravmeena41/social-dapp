@@ -70,6 +70,15 @@ export const createPost = async (desc, file) => {
     console.log("Error: ", error);
   }
 };
+export const updatePost = async (postId, desc) => {
+  try {
+    const contract = await getContract();
+    let transaction = await contract.updatePost(postId, desc);
+    await transaction.wait();
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+};
 
 export const likePost = async (postId) => {
   try {
