@@ -54,7 +54,9 @@ const Profile = ({ currentUserId }) => {
         friends: user[6],
       };
       setCurrentUser(currentUser);
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }, [currentUserId]);
 
   return (
@@ -94,8 +96,7 @@ const Profile = ({ currentUserId }) => {
           <input
             onChange={async (e) => {
               try {
-                currentUser.userId === user.userId &&
-                  (await updateUser(e.target.files[0], "cover"));
+                await updateUser(e.target.files[0], "cover");
                 let user = await createAndFetchUser();
                 const currentUser = {
                   userId: user[0],
